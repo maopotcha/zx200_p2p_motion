@@ -9,6 +9,8 @@
 #include <string>
 #include <iostream>
 
+#include "ament_index_cpp/get_package_share_directory.hpp"
+
 std::vector<std::vector<double>> load_joint_targets(const std::string &filename) {
   std::vector<std::vector<double>> targets;
   YAML::Node config = YAML::LoadFile(filename);
@@ -43,9 +45,14 @@ int main(int argc, char **argv)
       {0.0, 0.0, 0.0, 0.0, 0.0}};
   */
   
-  std::string yaml_file = "~/ros2_ws/src/zx200_p2p_config/config/p2p_targets.yaml";
-  std::vector<std::vector<double>> joint_targets = load_joint_targets(yaml_file);
+  //std::string yaml_file = "~/ros2_ws/src/zx200_p2p_motion/config/p2p_targets.yaml";
+  //std::vector<std::vector<double>> joint_targets = load_joint_targets(yaml_file);
 
+  std::string package_path = ament_index_cpp::get_package_share_directory("zx200_p2p_motion");
+  std::string yaml_path = package_path + "/config/p2p_targets.yaml";
+
+  YAML::Node config = YAML::LoadFile(yaml_path);
+  auto joint_targets = config["p2p_targets"].as<std::vector<std::vector<double>>>();
   
   for (size_t i = 0; i < joint_targets.size(); ++i)
   {
