@@ -10,4 +10,9 @@ ament_target_dependencies(moveit_p2p_node rclcpp moveit_ros_planning_interface)
 
 install(TARGETS moveit_p2p_node DESTINATION lib/${PROJECT_NAME})
 
+install(
+  DIRECTORY launch
+  DESTINATION share/${PROJECT_NAME}
+)
+
 ament_package()
