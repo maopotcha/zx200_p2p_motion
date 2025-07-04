@@ -5,6 +5,7 @@ from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
+from ament_index_python.packages import get_package_share_directory
 
 def generate_launch_description():
     # 起動時に prefix (= namespace) を指定
@@ -14,6 +15,10 @@ def generate_launch_description():
         description='Namespace prefix to apply to all topics, services, and actions'
     )
     prefix = LaunchConfiguration('prefix')
+
+    pkg_share = get_package_share_directory('zx200_p2p_motion')
+    kinematics_file = pkg_share + '/config/kinematics.yaml'
+    cartesian_file = pkg_share + '/config/cartesian_targets.yaml'
 
     # p2p_motion ノード本体
     p2p_node = Node(
