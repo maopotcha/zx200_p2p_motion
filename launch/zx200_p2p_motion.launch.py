@@ -10,7 +10,7 @@ def generate_launch_description():
             Node(
                 package='zx200_p2p_motion',
                 executable='moveit_p2p_node',  # 実際のノード名に変更
-#                name='p2p_motion',             # ノード名（/zx200/p2p_motion になる）
+                name='p2p_motion',             # ノード名（/zx200/p2p_motion になる）
                 output='screen',
                 parameters=[{
                     'some_param': 'value'      # 必要ならパラメータをここに
