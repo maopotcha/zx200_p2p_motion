@@ -2,7 +2,6 @@
 #include <moveit/move_group_interface/move_group_interface.h>
 #include <ament_index_cpp/get_package_share_directory.hpp>
 #include <yaml-cpp/yaml.h>
-
 #include <vector>
 #include <string>
 #include <chrono>
@@ -28,12 +27,21 @@ int main(int argc, char **argv)
 
   // YAMLから目標関節位置を読み込む
   std::string yaml_path = ament_index_cpp::get_package_share_directory("zx200_p2p_motion") + "/config/p2p_targets.yaml";
+
+  // 動作速度・加速度を最大に
+  move_group.setMaxVelocityScalingFactor(1.0);
+  move_group.setMaxAccelerationScalingFactor(1.0);
+  move_group.setPlanningTime(5.0);  // 必要に応じて調整
+  move_group.setNumPlanningAttempts(10);
+
   YAML::Node config = YAML::LoadFile(yaml_path);
   auto joint_targets = config["p2p_targets"].as<std::vector<std::vector<double>>>();
 
   for (size_t i = 0; i < joint_targets.size(); ++i)
   {
-    RCLCPP_INFO(node->get_logger(), "Planning to joint target %zu", i + 1);
+
+    RCLCPP_INFO(node->get_logger(), "Planning to joint target %zu...", i + 1);
+
     move_group.setJointValueTarget(joint_targets[i]);
 
     moveit::planning_interface::MoveGroupInterface::Plan plan;
@@ -44,10 +52,11 @@ int main(int argc, char **argv)
     }
     else
     {
-      RCLCPP_WARN(node->get_logger(), "Planning failed for step %zu", i + 1);
+      RCLCPP_WARN(node->get_logger(), "Planning failed at step %zu", i + 1);
     }
 
-    rclcpp::sleep_for(std::chrono::seconds(1));
+    // 次の計画のために少し待機（最小限）
+    rclcpp::sleep_for(std::chrono::milliseconds(20));
   }
 
   rclcpp::shutdown();
