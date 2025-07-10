@@ -26,7 +26,7 @@ int main(int argc, char **argv)
   moveit::planning_interface::MoveGroupInterface move_group(node, options, tf_buffer, timeout);
 
   // YAMLから目標関節位置を読み込む
-  std::string yaml_path = ament_index_cpp::get_package_share_directory("zx200_p2p_motion") + "/config/p2p_targets.yaml";
+  std::string yaml_path = ament_index_cpp::get_package_share_directory("zx200_p2p_motion") + "/config/p2p_targets_1-5.yaml";
 
   // 動作速度・加速度を最大に
   move_group.setMaxVelocityScalingFactor(1.0);
